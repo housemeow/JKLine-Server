@@ -1,0 +1,304 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="JKLineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Friend">
+          <Key>
+            <PropertyRef Name="omid" />
+            <PropertyRef Name="fmid" />
+          </Key>
+          <Property Name="omid" Type="int" Nullable="false" />
+          <Property Name="fmid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Invitation">
+          <Key>
+            <PropertyRef Name="smid" />
+            <PropertyRef Name="rmid" />
+          </Key>
+          <Property Name="smid" Type="int" Nullable="false" />
+          <Property Name="rmid" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Member">
+          <Key>
+            <PropertyRef Name="mid" />
+          </Key>
+          <Property Name="mid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="id" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="password" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="phone" Type="varchar" MaxLength="50" />
+          <Property Name="name" Type="varchar" MaxLength="50" />
+          <Property Name="state" Type="varchar" MaxLength="50" />
+          <Property Name="pushToken" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="MessageQueue">
+          <Key>
+            <PropertyRef Name="smid" />
+            <PropertyRef Name="rmid" />
+            <PropertyRef Name="timeStamp" />
+          </Key>
+          <Property Name="smid" Type="int" Nullable="false" />
+          <Property Name="rmid" Type="int" Nullable="false" />
+          <Property Name="timeStamp" Type="datetime" Nullable="false" />
+          <Property Name="message" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <Association Name="FK_rimd_Friend_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Friend" Type="Self.Friend" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="Friend">
+              <PropertyRef Name="fmid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rimd_Invitation_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Invitation" Type="Self.Invitation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="Invitation">
+              <PropertyRef Name="rmid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_rimd_MessageQueue_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="MessageQueue" Type="Self.MessageQueue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="MessageQueue">
+              <PropertyRef Name="rmid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_smid_Friend_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Friend" Type="Self.Friend" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="Friend">
+              <PropertyRef Name="omid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_smid_Invitation_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="Invitation" Type="Self.Invitation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="Invitation">
+              <PropertyRef Name="smid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_smid_MessageQueue_ToMember">
+          <End Role="Member" Type="Self.Member" Multiplicity="1" />
+          <End Role="MessageQueue" Type="Self.MessageQueue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="MessageQueue">
+              <PropertyRef Name="smid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="JKLineModelStoreContainer">
+          <EntitySet Name="Friend" EntityType="Self.Friend" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Invitation" EntityType="Self.Invitation" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Member" EntityType="Self.Member" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="MessageQueue" EntityType="Self.MessageQueue" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_rimd_Friend_ToMember" Association="Self.FK_rimd_Friend_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Friend" EntitySet="Friend" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rimd_Invitation_ToMember" Association="Self.FK_rimd_Invitation_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Invitation" EntitySet="Invitation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_rimd_MessageQueue_ToMember" Association="Self.FK_rimd_MessageQueue_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="MessageQueue" EntitySet="MessageQueue" />
+          </AssociationSet>
+          <AssociationSet Name="FK_smid_Friend_ToMember" Association="Self.FK_smid_Friend_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Friend" EntitySet="Friend" />
+          </AssociationSet>
+          <AssociationSet Name="FK_smid_Invitation_ToMember" Association="Self.FK_smid_Invitation_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="Invitation" EntitySet="Invitation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_smid_MessageQueue_ToMember" Association="Self.FK_smid_MessageQueue_ToMember">
+            <End Role="Member" EntitySet="Member" />
+            <End Role="MessageQueue" EntitySet="MessageQueue" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="JKLineModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityContainer Name="JKLineEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Members" EntityType="JKLineModel.Member" />
+          <EntitySet Name="MessageQueues" EntityType="JKLineModel.MessageQueue" />
+          <AssociationSet Name="FK_rimd_MessageQueue_ToMember" Association="JKLineModel.FK_rimd_MessageQueue_ToMember">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="MessageQueue" EntitySet="MessageQueues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_smid_MessageQueue_ToMember" Association="JKLineModel.FK_smid_MessageQueue_ToMember">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="MessageQueue" EntitySet="MessageQueues" />
+          </AssociationSet>
+          <AssociationSet Name="Friend" Association="JKLineModel.Friend">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="Member1" EntitySet="Members" />
+          </AssociationSet>
+          <AssociationSet Name="Invitation" Association="JKLineModel.Invitation">
+            <End Role="Member" EntitySet="Members" />
+            <End Role="Member1" EntitySet="Members" />
+          </AssociationSet>
+        </EntityContainer>
+        <EntityType Name="Member">
+          <Key>
+            <PropertyRef Name="mid" />
+          </Key>
+          <Property Name="mid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="id" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="password" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="phone" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="pushToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="MessageQueueReceivers" Relationship="JKLineModel.FK_rimd_MessageQueue_ToMember" FromRole="Member" ToRole="MessageQueue" />
+          <NavigationProperty Name="MessageQueueSenders" Relationship="JKLineModel.FK_smid_MessageQueue_ToMember" FromRole="Member" ToRole="MessageQueue" />
+          <NavigationProperty Name="FriendOwners" Relationship="JKLineModel.Friend" FromRole="Member" ToRole="Member1" />
+          <NavigationProperty Name="Friends" Relationship="JKLineModel.Friend" FromRole="Member1" ToRole="Member" />
+          <NavigationProperty Name="Inviters" Relationship="JKLineModel.Invitation" FromRole="Member" ToRole="Member1" />
+          <NavigationProperty Name="Invitees" Relationship="JKLineModel.Invitation" FromRole="Member1" ToRole="Member" />
+        </EntityType>
+        <EntityType Name="MessageQueue">
+          <Key>
+            <PropertyRef Name="smid" />
+            <PropertyRef Name="rmid" />
+            <PropertyRef Name="timeStamp" />
+          </Key>
+          <Property Name="smid" Type="Int32" Nullable="false" />
+          <Property Name="rmid" Type="Int32" Nullable="false" />
+          <Property Name="timeStamp" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="message" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="MessageReceiver" Relationship="JKLineModel.FK_rimd_MessageQueue_ToMember" FromRole="MessageQueue" ToRole="Member" />
+          <NavigationProperty Name="MessageSender" Relationship="JKLineModel.FK_smid_MessageQueue_ToMember" FromRole="MessageQueue" ToRole="Member" />
+        </EntityType>
+        <Association Name="FK_rimd_MessageQueue_ToMember">
+          <End Type="JKLineModel.Member" Role="Member" Multiplicity="1" />
+          <End Type="JKLineModel.MessageQueue" Role="MessageQueue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="MessageQueue">
+              <PropertyRef Name="rmid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_smid_MessageQueue_ToMember">
+          <End Type="JKLineModel.Member" Role="Member" Multiplicity="1" />
+          <End Type="JKLineModel.MessageQueue" Role="MessageQueue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Member">
+              <PropertyRef Name="mid" />
+            </Principal>
+            <Dependent Role="MessageQueue">
+              <PropertyRef Name="smid" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="Friend">
+          <End Type="JKLineModel.Member" Role="Member" Multiplicity="*" />
+          <End Type="JKLineModel.Member" Role="Member1" Multiplicity="*" />
+        </Association>
+        <Association Name="Invitation">
+          <End Type="JKLineModel.Member" Role="Member" Multiplicity="*" />
+          <End Type="JKLineModel.Member" Role="Member1" Multiplicity="*" />
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="JKLineModelStoreContainer" CdmEntityContainer="JKLineEntities">
+          <EntitySetMapping Name="Members">
+            <EntityTypeMapping TypeName="JKLineModel.Member">
+              <MappingFragment StoreEntitySet="Member">
+                <ScalarProperty Name="pushToken" ColumnName="pushToken" />
+                <ScalarProperty Name="state" ColumnName="state" />
+                <ScalarProperty Name="name" ColumnName="name" />
+                <ScalarProperty Name="phone" ColumnName="phone" />
+                <ScalarProperty Name="password" ColumnName="password" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="mid" ColumnName="mid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="MessageQueues">
+            <EntityTypeMapping TypeName="JKLineModel.MessageQueue">
+              <MappingFragment StoreEntitySet="MessageQueue">
+                <ScalarProperty Name="message" ColumnName="message" />
+                <ScalarProperty Name="timeStamp" ColumnName="timeStamp" />
+                <ScalarProperty Name="rmid" ColumnName="rmid" />
+                <ScalarProperty Name="smid" ColumnName="smid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <AssociationSetMapping Name="Friend" TypeName="JKLineModel.Friend" StoreEntitySet="Friend">
+            <EndProperty Name="Member1">
+              <ScalarProperty Name="mid" ColumnName="omid" />
+            </EndProperty>
+            <EndProperty Name="Member">
+              <ScalarProperty Name="mid" ColumnName="fmid" />
+            </EndProperty>
+          </AssociationSetMapping>
+          <AssociationSetMapping Name="Invitation" TypeName="JKLineModel.Invitation" StoreEntitySet="Invitation">
+            <EndProperty Name="Member1">
+              <ScalarProperty Name="mid" ColumnName="smid" />
+            </EndProperty>
+            <EndProperty Name="Member">
+              <ScalarProperty Name="mid" ColumnName="rmid" />
+            </EndProperty>
+          </AssociationSetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="true" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

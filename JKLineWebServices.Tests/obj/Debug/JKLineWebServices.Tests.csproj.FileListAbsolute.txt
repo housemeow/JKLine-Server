@@ -1,0 +1,1 @@
+C:\Users\Kai\Documents\Visual Studio 2013\Projects\JKLineWebServices\JKLineWebServices.Tests\obj\Debug\JKLineWebServices.Tests.csprojResolveAssemblyReference.cache
