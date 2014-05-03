@@ -265,7 +265,6 @@ namespace JKLineWebServices.Controllers
         public IEnumerable<dynamic> GetInvitations(int mid)
         {
             return Array.ConvertAll(GetMember(mid).Inviters.ToArray(), item => new { mid = item.mid, id = item.id, name = item.name });
-
         }
 
         internal dynamic LoginGetMember(string id, string password)
@@ -302,7 +301,6 @@ namespace JKLineWebServices.Controllers
             {
                 return MESSAGE_MEMBER_IS_NOT_EXISTING;
             }
-
             MessageQueue messageQueue = new MessageQueue();
             messageQueue.message = message;
             messageQueue.MessageReceiver = GetMember(rmid);
@@ -311,21 +309,13 @@ namespace JKLineWebServices.Controllers
             messageQueue.smid = smid;
             messageQueue.timeStamp = DateTime.Now;
             GetMessageQueues().Add(messageQueue);
-
-
-            string token = "APA91bGpCq75itv8QM7ShVHWkDW5uNdDV4v9A4nJHkRh0mDxLHjnLFNIOxcf_9OqYk6olFX35sGRVreMND8KPAojsdncIQw4hm7_EDnS9o9Fh6G0z-EKojyNO486wmO4zxEs4QWpwHoL";
+            string receiverPushToken = messageQueue.MessageReceiver.pushToken;
             PushBroker push = new PushBroker();
-
             push.RegisterGcmService(new GcmPushChannelSettings("AIzaSyA7dl25oulxDoTpExp9RdAlsCUR-tv61_U"));
-
             Dictionary<string, string> pushedMessage = new Dictionary<string, string>();
-
-
-            push.QueueNotification(new GcmNotification().ForDeviceRegistrationId(token)
-                                  .WithJson("{\"alert\":\"Hello World!\",\"badge\":7,\"sound\":\"sound.caf\"}"));
-
-
-
+            string jsonString = String.Format("{{\"message\":\"{0}\",\"senderName\":\"{1}\",\"timeStamp\":\"{2}\"}}", message, messageQueue.MessageSender.name , messageQueue.timeStamp.ToShortTimeString());
+            push.QueueNotification(new GcmNotification().ForDeviceRegistrationId(receiverPushToken)
+                                  .WithJson(jsonString));
             try
             {
                 jklineEntities.SaveChanges();
@@ -341,12 +331,6 @@ namespace JKLineWebServices.Controllers
                     }
                 }
             }
-
-            //FindMemberById(rid).Inviters.Add(GetMember(smid));
-            //GetMember(smid).Invitees.Add(FindMemberById(rid));
-            //jklineEntities.SaveChanges();
-
-
             jklineEntities.SaveChanges();
             return DateTime.Now.ToString();
         }
@@ -363,8 +347,6 @@ namespace JKLineWebServices.Controllers
                 messageQueues.Remove(messageQueue);
             }
             jklineEntities.SaveChanges();
-
-            // List < String > list2 = list1.Except(list1.Where(c => c.Length < 10)).ToList();
             return result;
             throw new System.NotImplementedException();
         }
