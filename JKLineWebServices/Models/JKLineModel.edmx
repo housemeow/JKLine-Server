@@ -181,8 +181,8 @@
           <Property Name="name" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="state" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="pushToken" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
-          <NavigationProperty Name="MessageQueueReceivers" Relationship="JKLineModel.FK_rimd_MessageQueue_ToMember" FromRole="Member" ToRole="MessageQueue" />
-          <NavigationProperty Name="MessageQueueSenders" Relationship="JKLineModel.FK_smid_MessageQueue_ToMember" FromRole="Member" ToRole="MessageQueue" />
+          <NavigationProperty Name="ReceiveMessageQueue" Relationship="JKLineModel.FK_rimd_MessageQueue_ToMember" FromRole="Member" ToRole="MessageQueue" />
+          <NavigationProperty Name="SendMessageQueue" Relationship="JKLineModel.FK_smid_MessageQueue_ToMember" FromRole="Member" ToRole="MessageQueue" />
           <NavigationProperty Name="FriendOwners" Relationship="JKLineModel.Friend" FromRole="Member" ToRole="Member1" />
           <NavigationProperty Name="Friends" Relationship="JKLineModel.Friend" FromRole="Member1" ToRole="Member" />
           <NavigationProperty Name="Inviters" Relationship="JKLineModel.Invitation" FromRole="Member" ToRole="Member1" />

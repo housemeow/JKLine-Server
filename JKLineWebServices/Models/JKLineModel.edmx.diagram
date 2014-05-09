@@ -5,7 +5,7 @@
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
       <Diagram DiagramId="251b55ec013942cb930396ccf780d18c" Name="Diagram1">
-        <EntityTypeShape EntityType="JKLineModel.Member" Width="1.5" PointX="0.75" PointY="1" />
+        <EntityTypeShape EntityType="JKLineModel.Member" Width="2" PointX="0.75" PointY="1" />
         <EntityTypeShape EntityType="JKLineModel.MessageQueue" Width="1.5" PointX="3" PointY="1.625" />
         <AssociationConnector Association="JKLineModel.FK_rimd_MessageQueue_ToMember" />
         <AssociationConnector Association="JKLineModel.FK_smid_MessageQueue_ToMember" />

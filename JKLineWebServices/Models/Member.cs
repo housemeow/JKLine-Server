@@ -16,8 +16,8 @@ namespace JKLineWebServices.Models
     {
         public Member()
         {
-            this.MessageQueueReceivers = new HashSet<MessageQueue>();
-            this.MessageQueueSenders = new HashSet<MessageQueue>();
+            this.ReceiveMessageQueue = new HashSet<MessageQueue>();
+            this.SendMessageQueue = new HashSet<MessageQueue>();
             this.FriendOwners = new HashSet<Member>();
             this.Friends = new HashSet<Member>();
             this.Inviters = new HashSet<Member>();
@@ -32,8 +32,8 @@ namespace JKLineWebServices.Models
         public string state { get; set; }
         public string pushToken { get; set; }
     
-        public virtual ICollection<MessageQueue> MessageQueueReceivers { get; set; }
-        public virtual ICollection<MessageQueue> MessageQueueSenders { get; set; }
+        public virtual ICollection<MessageQueue> ReceiveMessageQueue { get; set; }
+        public virtual ICollection<MessageQueue> SendMessageQueue { get; set; }
         public virtual ICollection<Member> FriendOwners { get; set; }
         public virtual ICollection<Member> Friends { get; set; }
         public virtual ICollection<Member> Inviters { get; set; }

@@ -39,13 +39,13 @@ namespace JKLineWebServices.Controllers
         private string MESSAGE_HAS_BEEN_FRIEND = "alreadyBeenFriends";
         private string MESSAGE_PUSH_TOKEN_IS_NULL = "pushTokenIsNull";
 
-        public JKLineDb()
-        {
-            jklineEntities = new JKLineEntities();
-        }
-
         public JKLineEntities GetJKLineEntites()
         {
+            if (jklineEntities == null)
+            {
+
+                jklineEntities = new JKLineEntities();
+            }
             return jklineEntities;
         }
 
@@ -85,8 +85,8 @@ namespace JKLineWebServices.Controllers
             member.password = password;
             member.name = name;
             member.pushToken = pushToken;
-            jklineEntities.Members.Add(member);
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().Members.Add(member);
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
 
@@ -139,7 +139,7 @@ namespace JKLineWebServices.Controllers
 
             FindMemberById(rid).Inviters.Add(GetMember(smid));
             GetMember(smid).Invitees.Add(FindMemberById(rid));
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
 
@@ -171,6 +171,14 @@ namespace JKLineWebServices.Controllers
         private Member GetMember(int mid)
         {
             return GetMembers().Where(item => item.mid == mid).First();
+        }
+
+        private int GetUnreceiveMessageCount(int smid, int rmid)
+        {
+            int count = 0;
+            ICollection<MessageQueue> queue = FindMemberByMid(rmid).ReceiveMessageQueue;
+            count = queue.Where(item=>item.smid==smid && item.message!="").Count();
+            return count;
         }
 
         private bool IsMemberExisting(int mid)
@@ -206,7 +214,7 @@ namespace JKLineWebServices.Controllers
             GetMember(rmid).FriendOwners.Add(GetMember((smid)));
             GetMember(rmid).FriendOwners.Add(GetMember((smid)));
             GetMember(smid).FriendOwners.Add(GetMember((rmid)));
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
         public string DisagreeInvitation(int smid, int rmid)
@@ -221,7 +229,7 @@ namespace JKLineWebServices.Controllers
             }
             GetMember(smid).Inviters.Remove(GetMember(rmid));
             GetMember(rmid).Inviters.Remove(GetMember(smid));
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
 
@@ -242,7 +250,7 @@ namespace JKLineWebServices.Controllers
                 return MESSAGE_NAME_IS_NULL;
             }
             GetMember(mid).name = name;
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
 
@@ -253,7 +261,7 @@ namespace JKLineWebServices.Controllers
                 return MESSAGE_MEMBER_IS_NOT_EXISTING;
             }
             GetMember(mid).state = state;
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
 
@@ -309,16 +317,19 @@ namespace JKLineWebServices.Controllers
             messageQueue.smid = smid;
             messageQueue.timeStamp = DateTime.Now;
             GetMessageQueues().Add(messageQueue);
-            string receiverPushToken = messageQueue.MessageReceiver.pushToken;
-            PushBroker push = new PushBroker();
-            push.RegisterGcmService(new GcmPushChannelSettings("AIzaSyA7dl25oulxDoTpExp9RdAlsCUR-tv61_U"));
-            Dictionary<string, string> pushedMessage = new Dictionary<string, string>();
-            string jsonString = String.Format("{{\"message\":\"{0}\",\"senderName\":\"{1}\",\"timeStamp\":\"{2}\"}}", message, messageQueue.MessageSender.name , messageQueue.timeStamp.ToShortTimeString());
-            push.QueueNotification(new GcmNotification().ForDeviceRegistrationId(receiverPushToken)
-                                  .WithJson(jsonString));
             try
             {
-                jklineEntities.SaveChanges();
+                GetJKLineEntites().SaveChanges();
+                DisposeJKLineEntities();
+                string receiverPushToken = messageQueue.MessageReceiver.pushToken;
+                PushBroker push = new PushBroker();
+                push.RegisterGcmService(new GcmPushChannelSettings("AIzaSyA7dl25oulxDoTpExp9RdAlsCUR-tv61_U"));
+                Dictionary<string, string> pushedMessage = new Dictionary<string, string>();
+                int unreceiveMessageCount = GetUnreceiveMessageCount(smid, rmid);
+                string jsonString = String.Format("{{\"message\":\"{0}\",\"senderName\":\"{1}\",\"timeStamp\":\"{2}\",\"count\":{3}}}", message, messageQueue.MessageSender.name, messageQueue.timeStamp.ToShortTimeString(), unreceiveMessageCount);
+                push.QueueNotification(new GcmNotification().ForDeviceRegistrationId(receiverPushToken)
+                                      .WithJson(jsonString));
+                return jsonString;
 
             }
             catch (DbEntityValidationException dbEx)
@@ -331,8 +342,14 @@ namespace JKLineWebServices.Controllers
                     }
                 }
             }
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return DateTime.Now.ToString();
+        }
+
+        private void DisposeJKLineEntities()
+        {
+            jklineEntities.Dispose();
+            jklineEntities = null;
         }
 
         internal object ReceiveMessage(int smid, int rmid)
@@ -346,7 +363,7 @@ namespace JKLineWebServices.Controllers
             {
                 messageQueues.Remove(messageQueue);
             }
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return result;
             throw new System.NotImplementedException();
         }
@@ -362,7 +379,7 @@ namespace JKLineWebServices.Controllers
                 return MESSAGE_PUSH_TOKEN_IS_NULL;
             }
             GetMember(mid).pushToken = pushToken;
-            jklineEntities.SaveChanges();
+            GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
     }
