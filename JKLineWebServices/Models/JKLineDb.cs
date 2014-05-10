@@ -177,7 +177,7 @@ namespace JKLineWebServices.Controllers
         {
             int count = 0;
             ICollection<MessageQueue> queue = FindMemberByMid(rmid).ReceiveMessageQueue;
-            count = queue.Where(item=>item.smid==smid && item.message!="").Count();
+            count = queue.Where(item => item.message!="").Count();
             return count;
         }
 
