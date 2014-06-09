@@ -382,5 +382,13 @@ namespace JKLineWebServices.Controllers
             GetJKLineEntites().SaveChanges();
             return MESSAGE_SUCCESS;
         }
+
+        internal int getNewEid()
+        {
+            Event newEvent = new Event();
+            GetJKLineEntites().Events.Add(newEvent);
+            GetJKLineEntites().SaveChanges();
+            return newEvent.eid;
+        }
     }
 }

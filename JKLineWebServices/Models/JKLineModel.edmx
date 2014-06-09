@@ -5,6 +5,12 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
     <Schema Namespace="JKLineModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2008" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="eid" />
+          </Key>
+          <Property Name="eid" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+        </EntityType>
         <EntityType Name="Friend">
           <Key>
             <PropertyRef Name="omid" />
@@ -117,6 +123,7 @@
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="JKLineModelStoreContainer">
+          <EntitySet Name="Event" EntityType="Self.Event" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Friend" EntityType="Self.Friend" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Invitation" EntityType="Self.Invitation" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Member" EntityType="Self.Member" Schema="dbo" store:Type="Tables" />
@@ -169,6 +176,7 @@
             <End Role="Member" EntitySet="Members" />
             <End Role="Member1" EntitySet="Members" />
           </AssociationSet>
+          <EntitySet Name="Events" EntityType="JKLineModel.Event" />
         </EntityContainer>
         <EntityType Name="Member">
           <Key>
@@ -233,6 +241,12 @@
           <End Type="JKLineModel.Member" Role="Member" Multiplicity="*" />
           <End Type="JKLineModel.Member" Role="Member1" Multiplicity="*" />
         </Association>
+        <EntityType Name="Event">
+          <Key>
+            <PropertyRef Name="eid" />
+          </Key>
+          <Property Name="eid" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -278,6 +292,13 @@
               <ScalarProperty Name="mid" ColumnName="rmid" />
             </EndProperty>
           </AssociationSetMapping>
+          <EntitySetMapping Name="Events">
+            <EntityTypeMapping TypeName="JKLineModel.Event">
+              <MappingFragment StoreEntitySet="Event">
+                <ScalarProperty Name="eid" ColumnName="eid" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

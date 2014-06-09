@@ -11,6 +11,7 @@
         <AssociationConnector Association="JKLineModel.FK_smid_MessageQueue_ToMember" />
         <AssociationConnector Association="JKLineModel.Friend" />
         <AssociationConnector Association="JKLineModel.Invitation" />
+        <EntityTypeShape EntityType="JKLineModel.Event" Width="1.5" PointX="3.375" PointY="4.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>
